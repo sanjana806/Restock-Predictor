@@ -1,0 +1,20 @@
+# ==============================================================================
+# Restock-Predictor Global Streamlit Theme Configuration
+# Sleek, Modern SaaS Dark Palette with Electric Indigo & Cyan Accents
+# ==============================================================================
+
+[theme]
+primaryColor = "#6366F1"              # Electric Indigo accent
+backgroundColor = "#0B0F19"           # Midnight Obsidian background
+secondaryBackgroundColor = "#111827"  # Deep Slate for cards, containers & sidebar
+textColor = "#F3F4F6"                 # High-contrast crisp off-white
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+maxUploadSize = 50                    # Allow up to 50MB CSV files
+
+[browser]
+gatherUsageStats = false

@@ -1,0 +1,54 @@
+# ==============================================================================
+# render.yaml - Infrastructure as Code (IaC) Blueprint for Render Deployment
+# ==============================================================================
+# Project: Restock-Predictor
+# Target Category: DEV.to Hacktoberfest ($200 Best Use of Render)
+# Documentation: https://render.com/docs/blueprint-spec
+# ==============================================================================
+
+services:
+  - type: web
+    name: restock-predictor
+    runtime: python
+    region: oregon # Low-latency US West default
+    plan: free     # Eligible for Render Free Tier or Starter
+    branch: main
+    
+    # Render Build Command
+    # Upgrades pip and installs production dependencies cleanly
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    
+    # Render Start Command
+    # Critical: Streamlit must bind to 0.0.0.0 and listen on the dynamic $PORT assigned by Render
+    startCommand: "streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.enableCORS false --server.enableXsrfProtection false --server.headless true"
+    
+    # Health check endpoint (Streamlit natively answers on /_stcore/health)
+    healthCheckPath: /_stcore/health
+
+    # Environment Variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: "true"
+
+      - key: STREAMLIT_BROWSER_GATHER_USAGE_STATS
+        value: "false"
+
+      - key: MONGO_DB_NAME
+        value: restock_predictor
+
+      - key: MONGO_COLLECTION_NAME
+        value: upload_logs
+
+      # Secret credentials managed securely via Render Dashboard (sync: false)
+      - key: MONGO_URI
+        sync: false
+        # Note: Set this in the Render Dashboard Environment tab
+        # Format: mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+
+      - key: TABPFN_API_KEY
+        sync: false
+        # Note: Set your Prior Labs API Token in the Render Dashboard Environment tab
+        # Format: your_tabpfn_token_here
